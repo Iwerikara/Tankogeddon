@@ -21,7 +21,7 @@ void EmptyLinkFunctionForGeneratedCodeTankogeddon_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0x4649BEA5,
+				0x2EB049DA,
 				0x8EBF8CD4,
 				METADATA_PARAMS(nullptr, 0)
 			};
