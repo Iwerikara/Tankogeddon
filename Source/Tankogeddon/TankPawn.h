@@ -39,16 +39,19 @@ protected:
 		TSubclassOf<ACannon> CannonClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float MoveSpeed = 100.f;
+		float MoveSpeed = 80.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float RotationSpeed = 100.f;
+		float RotationSpeed = 80.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float RotationSmoothness = 0.1f;
+		float RotationSmoothness = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float TurretRotationSmoothness = 0.1f;
+		float RotationSmoothness = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+		float TurretRotationSpeed = 150.f;
 
 	void SetupCannon();
 
@@ -67,11 +70,15 @@ public:
 		void RotateRight(float AxisValue);
 	UFUNCTION()
 		void Fire();
+	UFUNCTION()
+		void AltFire();
 
 private:
 	float TargetForwardAxisValue = 0.f;
 	float TargetRotateRightValue = 0.f;
+	float CurrentForwardAxisValue = 0.f;
 	float CurrentRightAxisValue = 0.f;
+
 
 	UPROPERTY()
 		ATankPlayerController* TankController;

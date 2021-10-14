@@ -23,6 +23,8 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn point"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	AltFireShotsLeft = AltFireShots;
 }
 
 void ACannon::Fire()
@@ -34,16 +36,51 @@ void ACannon::Fire()
 
 	bReadyToFire = false;
 
+	Shot();
+
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+}
+
+void ACannon::AltFire()
+{
+	if (!bReadyToFire)
+	{
+		return;
+	}
+
+	bReadyToFire = false;
+
+	AltShot();
+
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+}
+
+void ACannon::Shot()
+{
+
 	if (Type == ECannonType::FireProjectile)
 	{
-		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - projectile");
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "Fire - projectile");
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, "Fire - trace");
+	}
+}
+
+void ACannon::AltShot()
+{
+	if (AltFireShotsLeft == 0)
+	{
+		AltFireShotsLeft = AltFireShots;
+		return;
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+	Shot();
+
+	AltFireShotsLeft--;
+
+	GetWorld()->GetTimerManager().SetTimer(AltFireTimerHandle, this, &ACannon::AltShot, AltFireShotDelay, false);
 }
 
 bool ACannon::IsReadyToFire()
@@ -68,4 +105,5 @@ void ACannon::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	GetWorld()->GetTimerManager().ClearTimer(ReloadTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(AltFireTimerHandle);
 }

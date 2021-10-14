@@ -33,16 +33,28 @@ protected:
 		float FireDamage = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+		int AltFireShots = 4;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+		float AltFireShotDelay = 0.2f;
+
+	int AltFireShotsLeft;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		ECannonType Type = ECannonType::FireProjectile;
 
 	FTimerHandle ReloadTimerHandle;
+	FTimerHandle AltFireTimerHandle;
 
 	bool bReadyToFire = false;
 
 public:
 	ACannon();
 
+	void Shot();
+	void AltShot();
 	void Fire();
+	void AltFire();
 
 	bool IsReadyToFire();
 
