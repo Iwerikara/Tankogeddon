@@ -1,0 +1,15 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-Tankogeddon.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\TankogeddonEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Tankogeddon.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankogeddonGameModeBase.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Tankogeddon.init.gen.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankogeddonGameModeBase.gen.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Default.rc2.res"
+/OUT:"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\UE4Editor-Tankogeddon.lib"
