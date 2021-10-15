@@ -5,5 +5,5 @@
 #include "CoreMinimal.h"
 #include <Logging/LogMacros.h>
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTankogeddon, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogTankogeddon, Warning, All);
 

@@ -7,13 +7,17 @@
 /IGNORE:4221
 /NODEFAULTLIB
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\TankogeddonEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\AmmoBox.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Cannon.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Projectile.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Tankogeddon.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankogeddonGameModeBase.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankPawn.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankPlayerController.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\AmmoBox.gen.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Cannon.gen.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\GameStructs.gen.cpp.obj"
+"D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Projectile.gen.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\Tankogeddon.init.gen.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankogeddonGameModeBase.gen.cpp.obj"
 "D:\teach\geek\Unreal\Tankogeddon\Intermediate\Build\Win64\UE4Editor\Development\Tankogeddon\TankPawn.gen.cpp.obj"

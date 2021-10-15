@@ -18,6 +18,7 @@ class TANKOGEDDON_API ATankPawn : public APawn
 protected:
 
 	virtual void BeginPlay() override;
+	void AddCannon(TSubclassOf<ACannon> NewCannonClass = nullptr);
 
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -38,6 +39,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 		TSubclassOf<ACannon> CannonClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UserInput|Cannons")
+		TSubclassOf<ACannon> FirstCannonClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UserInput|Cannons")
+		TSubclassOf<ACannon> SecondCannonClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UserInput|Cannons")
+		TSubclassOf<ACannon> ThirdCannonClass;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float MoveSpeed = 80.f;
 
@@ -45,7 +55,7 @@ protected:
 		float RotationSpeed = 80.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float RotationSmoothness = 10.f;
+		float MovementSmoothness = 10.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float RotationSmoothness = 10.f;
@@ -53,7 +63,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float TurretRotationSpeed = 150.f;
 
-	void SetupCannon();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
+		bool bHasFirstCannon = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
+		bool bHasSecondCannon = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
+		bool bHasThirdCannon = false;
 
 
 public:
@@ -72,6 +87,14 @@ public:
 		void Fire();
 	UFUNCTION()
 		void AltFire();
+
+	void SetupCannon(TSubclassOf<ACannon> SetupCannonClass);
+	TSubclassOf<ACannon> GetCannonClass();
+	ACannon* GetCannon();
+
+	void SelectFirstCannon();
+	void SelectSecondCannon();
+	void SelectThirdCannon();
 
 private:
 	float TargetForwardAxisValue = 0.f;

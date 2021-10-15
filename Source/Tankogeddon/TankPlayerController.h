@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Cannon.h"
 #include "TankPlayerController.generated.h"
 
 class ATankPawn;
@@ -39,5 +40,9 @@ protected:
 
 	void Fire();
 	void AltFire();
+
+	void SelectFirstCannon();
+	void SelectSecondCannon();
+	void SelectThirdCannon();
 
 };

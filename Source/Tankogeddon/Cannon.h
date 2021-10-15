@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameStructs.h"
+#include "Projectile.h"
+
 #include "Cannon.generated.h"
 
 class UStaticMeshComponent;
@@ -33,20 +35,30 @@ protected:
 		float FireDamage = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		int AltFireShots = 4;
+		int32 AltFireShots = 4;
+
+	int32 AltFireShotsLeft = AltFireShots;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		float AltFireShotDelay = 0.2f;
 
-	int AltFireShotsLeft;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+		int32 MaxAmmo = 20;
+
+	int32 CurrentAmmo = MaxAmmo;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		ECannonType Type = ECannonType::FireProjectile;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+		TSubclassOf<AProjectile> ProjectileClass;
 
 	FTimerHandle ReloadTimerHandle;
 	FTimerHandle AltFireTimerHandle;
 
 	bool bReadyToFire = false;
+	int32 GetMaxAmmo();
+	int32 GetCurrentAmmo();
+	bool AddAmmo(int32 Ammo);
 
 public:
 	ACannon();

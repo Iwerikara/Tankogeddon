@@ -54,10 +54,10 @@ void ATankPawn::BeginPlay()
 	Super::BeginPlay();
 
 	TankController = Cast<ATankPlayerController>(GetController());
-	SetupCannon();
+	SetupCannon(CannonClass);
 }
 
-void ATankPawn::SetupCannon()
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> SetupCannonClass)
 {
 	if (Cannon)
 	{
@@ -65,12 +65,25 @@ void ATankPawn::SetupCannon()
 		Cannon = nullptr;
 	}
 
+	CannonClass = SetupCannonClass;
+
 	FActorSpawnParameters Params;
 	Params.Instigator = this;
 	Params.Owner = this;
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	AddCannon(SetupCannonClass);
 
+}
+
+TSubclassOf<ACannon> ATankPawn::GetCannonClass()
+{
+	return CannonClass;
+}
+
+ACannon* ATankPawn::GetCannon()
+{
+	return Cannon;
 }
 
 // Called every frame
@@ -87,7 +100,7 @@ void ATankPawn::Tick(float DeltaTime)
 	SetActorLocation(MovePosition, true);
 
 	// Tank rotation
-	CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRightAxisValue, DeltaTime, RotationSmoothness);
+	CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRotateRightValue, DeltaTime, RotationSmoothness);
 
 	UE_LOG(LogTankogeddon, VeryVerbose, TEXT("CurrentRightAxisValue = %f TargetRightAxisValue = %f"), CurrentRightAxisValue, TargetRotateRightValue);
 
@@ -123,5 +136,45 @@ void ATankPawn::AltFire()
 	if (Cannon)
 	{
 		Cannon->AltFire();
+	}
+}
+
+void ATankPawn::AddCannon(TSubclassOf<ACannon> CannonClassToAdd)
+{
+	if (CannonClassToAdd == FirstCannonClass)
+	{
+		bHasFirstCannon = true;
+	}
+	else if (CannonClassToAdd == SecondCannonClass)
+	{
+		bHasSecondCannon = true;
+	}
+	else if (CannonClassToAdd == ThirdCannonClass)
+	{
+		bHasThirdCannon = true;
+	}
+}
+
+void ATankPawn::SelectFirstCannon()
+{
+	if (FirstCannonClass && bHasFirstCannon)
+	{
+		SetupCannon(FirstCannonClass);
+	}
+}
+
+void ATankPawn::SelectSecondCannon()
+{
+	if (SecondCannonClass && bHasSecondCannon)
+	{
+		SetupCannon(SecondCannonClass);
+	}
+}
+
+void ATankPawn::SelectThirdCannon()
+{
+	if (ThirdCannonClass && bHasThirdCannon)
+	{
+		SetupCannon(ThirdCannonClass);
 	}
 }
