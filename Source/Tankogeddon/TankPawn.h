@@ -79,6 +79,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 		bool bHasThirdCannon = false;
 
+	int32 FirstCannonAmmo = -1.f;
+	int32 SecondCannonAmmo = -1.f;
+	int32 ThirdCannonAmmo = -1.f;
 
 public:
 	// Sets default values for this pawn's properties
@@ -97,6 +100,7 @@ public:
 	UFUNCTION()
 		void AltFire();
 
+
 	UFUNCTION()
 		void TakeDamage(FDamageData DamageData);
 
@@ -104,7 +108,7 @@ public:
 	TSubclassOf<ACannon> GetCannonClass();
 	ACannon* GetCannon();
 
-
+	void ShowAmmoLeft();
 	void SelectFirstCannon();
 	void SelectSecondCannon();
 	void SelectThirdCannon();

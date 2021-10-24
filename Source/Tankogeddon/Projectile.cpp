@@ -2,6 +2,7 @@
 
 
 #include "Projectile.h"
+#include "Tankogeddon.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -45,7 +46,7 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		}
 		else
 		{
-			OtherActor->Destroy();
+			//OtherActor->Destroy();
 		}
 
 		Destroy();

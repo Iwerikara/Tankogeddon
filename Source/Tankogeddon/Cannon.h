@@ -26,13 +26,13 @@ protected:
 		UArrowComponent* ProjectileSpawnPoint;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireRate = 1;
+		float FireRate = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireRange = 1000;
+		float FireRange = 1000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireDamage = 1;
+		float FireDamage = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		int32 AltFireShots = 4;
@@ -58,6 +58,7 @@ protected:
 	bool bReadyToFire = false;
 	int32 GetMaxAmmo();
 	int32 GetCurrentAmmo();
+	void SetCurrentAmmo(int32 Ammo);
 	bool AddAmmo(int32 Ammo);
 
 public:

@@ -3,6 +3,7 @@
 
 #include "Cannon.h"
 #include "DrawDebugHelpers.h"
+#include "Tankogeddon.h"
 #include <Components/SceneComponent.h>
 #include <Components/StaticMeshComponent.h>
 #include <Components/ArrowComponent.h>
@@ -31,7 +32,6 @@ void ACannon::Fire()
 {
 		if (CurrentAmmo == 0)
 		{
-			GEngine->AddOnScreenDebugMessage(10, 1, FColor::Orange, "No ammo!");
 			return;
 		}
 
@@ -99,9 +99,17 @@ void ACannon::Shot()
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_Visibility, TraceParams))
 		{
 			DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Purple, false, 0.5f, 0, 5);
-			if (HitResult.Actor.Get())
+
+			IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(HitResult.Actor.Get());
+
+			if (DamageTakerActor)
 			{
-				HitResult.Actor.Get()->Destroy();
+				FDamageData DamageData;
+				DamageData.DamageValue = FireDamage;
+				DamageData.Instigator = this;
+				DamageData.DamageMaker = this;
+
+				DamageTakerActor->TakeDamage(DamageData);
 			}
 		}
 		else
@@ -158,6 +166,11 @@ void ACannon::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	int32 ACannon::GetCurrentAmmo()
 	{
 		return CurrentAmmo;
+	}
+
+	void ACannon::SetCurrentAmmo(int32 Ammo)
+	{
+		CurrentAmmo = Ammo;
 	}
 
 	bool ACannon::AddAmmo(int32 Ammo)

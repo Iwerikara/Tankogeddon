@@ -68,56 +68,73 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> SetupCannonClass)
 {
 	if (Cannon)
 	{
+		if (CannonClass == FirstCannonClass)
+		{
+			FirstCannonAmmo = Cannon->GetCurrentAmmo();
+		}
+		else if (CannonClass == SecondCannonClass)
+		{
+			SecondCannonAmmo = Cannon->GetCurrentAmmo();
+		}
+		else if (CannonClass == ThirdCannonClass)
+		{
+			ThirdCannonAmmo = Cannon->GetCurrentAmmo();
+		}
+
 		Cannon->Destroy();
 		Cannon = nullptr;
 	}
-
 	CannonClass = SetupCannonClass;
-
 	FActorSpawnParameters Params;
 	Params.Instigator = this;
 	Params.Owner = this;
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, Params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	AddCannon(SetupCannonClass);
 
+	if (SetupCannonClass == FirstCannonClass && FirstCannonAmmo >= 0)
+	{
+		Cannon->SetCurrentAmmo(FirstCannonAmmo);
+	}
+	else if (SetupCannonClass == SecondCannonClass && SecondCannonAmmo >= 0)
+	{
+		Cannon->SetCurrentAmmo(SecondCannonAmmo);
+	}
+	else if (SetupCannonClass == ThirdCannonClass && ThirdCannonAmmo >= 0)
+	{
+		Cannon->SetCurrentAmmo(ThirdCannonAmmo);
+	}
+
+	AddCannon(SetupCannonClass);
 }
 
 TSubclassOf<ACannon> ATankPawn::GetCannonClass()
 {
 	return CannonClass;
 }
-
 ACannon* ATankPawn::GetCannon()
 {
 	return Cannon;
 }
-
 // Called every frame
 void ATankPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	// Tank movement
 	CurrentForwardAxisValue = FMath::FInterpTo(CurrentForwardAxisValue, TargetForwardAxisValue, DeltaTime, MovementSmoothness);
-
 	FVector CurrentLocation = GetActorLocation();
 	FVector ForwardVector = GetActorForwardVector();
 	FVector MovePosition = CurrentLocation + ForwardVector * CurrentForwardAxisValue * MoveSpeed * DeltaTime;
-
 	SetActorLocation(MovePosition, true);
-
 	// Tank rotation
-	CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRotateRightValue, DeltaTime, RotationSmoothness);
+	CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRightAxisValue, DeltaTime, RotationSmoothness);
 
 	//UE_LOG(LogTankogeddon, VeryVerbose, TEXT("CurrentRightAxisValue = %f TargetRightAxisValue = %f"), CurrentRightAxisValue, TargetRightAxisValue);
 
 	FRotator CurrentRotation = GetActorRotation();
 	float YawRotation = CurrentRightAxisValue * RotationSpeed * DeltaTime;
 	YawRotation += CurrentRotation.Yaw;
-
 	FRotator NewRotation = FRotator(0.f, YawRotation, 0.f);
 	SetActorRotation(NewRotation);
-
 	// Turret rotation
 	if (TankController)
 	{
@@ -129,12 +146,16 @@ void ATankPawn::Tick(float DeltaTime)
 		TurretMesh->SetWorldRotation(FMath::RInterpConstantTo(CurrRotation, TargetRotation, DeltaTime, TurretRotationSpeed));
 	}
 }
-
 void ATankPawn::Fire()
 {
 	if (Cannon)
 	{
+		if (Cannon->GetCurrentAmmo() <= 0)
+		{
+			GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Orange, "No ammo!");
+		}
 		Cannon->Fire();
+		ShowAmmoLeft();
 	}
 }
 
@@ -145,58 +166,61 @@ void ATankPawn::AltFire()
 		Cannon->AltFire();
 	}
 }
-
 void ATankPawn::AddCannon(TSubclassOf<ACannon> CannonClassToAdd)
 {
 	if (CannonClassToAdd == FirstCannonClass)
 	{
 		bHasFirstCannon = true;
 	}
+
 	else if (CannonClassToAdd == SecondCannonClass)
 	{
 		bHasSecondCannon = true;
 	}
+
 	else if (CannonClassToAdd == ThirdCannonClass)
 	{
-		bHasThirdCannon = true;
+		void ATankPawn::SelectFirstCannon()
+		{
+			if (FirstCannonClass && bHasFirstCannon)
+			{
+				SetupCannon(FirstCannonClass);
+			}
+		}
 	}
 }
-
-void ATankPawn::SelectFirstCannon()
-{
-	if (FirstCannonClass && bHasFirstCannon)
-	{
-		SetupCannon(FirstCannonClass);
-	}
-}
-
+		
 void ATankPawn::SelectSecondCannon()
-{
-	if (SecondCannonClass && bHasSecondCannon)
-	{
-		SetupCannon(SecondCannonClass);
-	}
-}
-
+		{
+			if (SecondCannonClass && bHasSecondCannon)
+			{
+				SetupCannon(SecondCannonClass);
+			}
+		}
 void ATankPawn::SelectThirdCannon()
-{
-	if (ThirdCannonClass && bHasThirdCannon)
-	{
-		SetupCannon(ThirdCannonClass);
-	}
-}
+		{
+			if (ThirdCannonClass && bHasThirdCannon)
+			{
+				SetupCannon(ThirdCannonClass);
+			}
+		}
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
-{
-	HealthComponent->TakeDamage(DamageData);
-}
+		{
+			HealthComponent->TakeDamage(DamageData);
+		}
 
 void ATankPawn::Die()
-{
-	Destroy();
-}
+		{
+			Destroy();
+		}
 
 void ATankPawn::DamageTaken(float DamageValue)
-{
-	UE_LOG(LogTankogeddon, Warning, TEXT("Tank %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
-}
+		{
+			UE_LOG(LogTankogeddon, Warning, TEXT("Tank %s taked damage:%f Health:%f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+		}
+
+void ATankPawn::ShowAmmoLeft()
+		{
+			UE_LOG(LogTankogeddon, Warning, TEXT("Tank %s ammo left: %d"), *GetName(), Cannon->GetCurrentAmmo());
+		}
