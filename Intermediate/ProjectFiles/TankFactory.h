@@ -28,14 +28,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UHealthComponent* HealthComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
-		class USoundBase* SpawnTankAudioEffect;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
-		class UParticleSystem* DeathParticleEffect;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
-		class USoundBase* DeathAudioEffect;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn tanks params")
 		TSubclassOf<ATankPawn> SpawnTankClass;
