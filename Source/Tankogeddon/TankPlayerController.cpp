@@ -30,6 +30,16 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!TankPawn)
+	{
+		TankPawn = Cast<ATankPawn>(GetPawn());
+	}
+
+	if (!TankPawn)
+	{
+		return;
+	}
+
 	FVector MouseDirection;
 	DeprojectMousePositionToWorld(MousePos, MouseDirection);
 

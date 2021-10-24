@@ -8,6 +8,7 @@
 #include "DamageTaker.h"
 #include "HealthComponent.h"
 #include "Components/BoxComponent.h"
+#include "Engine/TargetPoint.h"
 #include "TankPawn.generated.h"
 
 class UStaticMeshComponent;
@@ -94,7 +95,7 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points", Meta = (MakeEditWidget = true))
-		TArray<FVector> PatrollingPoints;
+		TArray<ATargetPoint> PatrollingPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
 		float MovementAccurency = 50;
@@ -136,7 +137,10 @@ public:
 	void SelectThirdCannon();
 
 	UFUNCTION()
-		TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; };
+		TArray<FVector> GetPatrollingPoints();
+
+	UFUNCTION()
+		void SetPatrollingPoints(const TArray<ATargetPoint*>& NewPoints);
 
 	UFUNCTION()
 		float GetMovementAccurency() { return MovementAccurency; };

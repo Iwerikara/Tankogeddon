@@ -272,3 +272,19 @@ FVector ATankPawn::GetEyesPosition()
 {
 	return CannonSetupPoint->GetComponentLocation();
 }
+
+TArray<FVector> ATankPawn::GetPatrollingPoints()
+{
+	TArray<FVector> Result;
+	for (ATargetPoint* Point : PatrollingPoints)
+	{
+		Result.Add(Point->GetActorLocation());
+	}
+
+	return Result;
+}
+
+void ATankPawn::SetPatrollingPoints(const TArray<ATargetPoint*>& NewPoints)
+{
+	PatrollingPoints = NewPoints;
+}
