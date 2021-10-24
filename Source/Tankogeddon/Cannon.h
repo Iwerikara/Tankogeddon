@@ -11,6 +11,10 @@
 
 class UStaticMeshComponent;
 class UArrowComponent;
+class UParticleSystemComponent;
+class UAudioComponent;
+class UForceFeedbackEffect;
+class UMatineeCameraShake;
 
 
 UCLASS()
@@ -24,6 +28,12 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UArrowComponent* ProjectileSpawnPoint;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UParticleSystemComponent* ShootEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UAudioComponent* AudioEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		float FireRate = 1.f;
@@ -51,6 +61,12 @@ protected:
 		ECannonType Type = ECannonType::FireProjectile;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		TSubclassOf<AProjectile> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		UForceFeedbackEffect* ShootForceEffect;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UMatineeCameraShake> ShootShake;
 
 	FTimerHandle ReloadTimerHandle;
 	FTimerHandle AltFireTimerHandle;

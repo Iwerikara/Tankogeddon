@@ -4,12 +4,16 @@
 #include "Cannon.h"
 #include "DrawDebugHelpers.h"
 #include "Tankogeddon.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Camera/CameraShake.h"
 #include <Components/SceneComponent.h>
 #include <Components/StaticMeshComponent.h>
 #include <Components/ArrowComponent.h>
 #include <Engine/Engine.h>
 #include <TimerManager.h>
 #include <Engine/World.h>
+#include <Particles/ParticleSystemComponent.h>
+#include <Components/AudioComponent.h>
 
 // Sets default values
 ACannon::ACannon()
@@ -25,6 +29,12 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn point"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot effect"));
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio effect"));
+	AudioEffect->SetupAttachment(ProjectileSpawnPoint);
 
 }
 
@@ -43,9 +53,6 @@ void ACannon::Fire()
 
 	Shot();
 
-	CurrentAmmo--;
-
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
 }
 
 void ACannon::AltFire()
@@ -117,6 +124,29 @@ void ACannon::Shot()
 			DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 0.5f, 0, 5);
 		}
 	}
+
+	ShootEffect->ActivateSystem();
+	AudioEffect->Play();
+
+	if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		if (ShootForceEffect)
+		{
+			FForceFeedbackParameters ShootForceEffectParams;
+			ShootForceEffectParams.bLooping = false;
+			ShootForceEffectParams.Tag = "shootForceEffectParams";
+			GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, ShootForceEffectParams);
+		}
+
+		if (ShootShake)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ShootShake);
+		}
+	}
+
+	CurrentAmmo--;
+
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
 }
 
 void ACannon::AltShot()

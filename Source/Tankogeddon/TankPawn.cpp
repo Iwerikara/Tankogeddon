@@ -139,11 +139,7 @@ void ATankPawn::Tick(float DeltaTime)
 	if (TankController)
 	{
 		FVector MousePos = TankController->GetMousePos();
-		FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), MousePos);
-		FRotator CurrRotation = TurretMesh->GetComponentRotation();
-		TargetRotation.Pitch = CurrRotation.Pitch;
-		TargetRotation.Roll = CurrRotation.Roll;
-		TurretMesh->SetWorldRotation(FMath::RInterpConstantTo(CurrRotation, TargetRotation, DeltaTime, TurretRotationSpeed));
+		RotateTurretTo(MousePos);
 	}
 }
 void ATankPawn::Fire()
@@ -212,6 +208,7 @@ void ATankPawn::TakeDamage(FDamageData DamageData)
 
 void ATankPawn::Die()
 		{
+			Cannon->Destroy();
 			Destroy();
 		}
 
@@ -224,3 +221,21 @@ void ATankPawn::ShowAmmoLeft()
 		{
 			UE_LOG(LogTankogeddon, Warning, TEXT("Tank %s ammo left: %d"), *GetName(), Cannon->GetCurrentAmmo());
 		}
+
+FVector ATankPawn::GetTurretForwardVector()
+{
+	return TurretMesh->GetForwardVector();
+}
+
+void ATankPawn::RotateTurretTo(FVector TargetPosition)
+{
+	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetPosition);
+	FRotator CurrRotation = TurretMesh->GetComponentRotation();
+	TargetRotation.Pitch = CurrRotation.Pitch;
+	TargetRotation.Roll = CurrRotation.Roll;
+	TurretMesh->SetWorldRotation(FMath::RInterpConstantTo(CurrRotation, TargetRotation, GetWorld()->GetDeltaSeconds(), TurretRotationSpeed));
+}
+FVector ATankPawn::GetEyesPosition()
+{
+	return CannonSetupPoint->GetComponentLocation();
+}

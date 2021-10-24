@@ -83,6 +83,12 @@ protected:
 	int32 SecondCannonAmmo = -1.f;
 	int32 ThirdCannonAmmo = -1.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points", Meta = (MakeEditWidget = true))
+		TArray<FVector> PatrollingPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
+		float MovementAccurency = 50;
+
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
@@ -112,6 +118,20 @@ public:
 	void SelectFirstCannon();
 	void SelectSecondCannon();
 	void SelectThirdCannon();
+
+	UFUNCTION()
+		TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; };
+
+	UFUNCTION()
+		float GetMovementAccurency() { return MovementAccurency; };
+
+	UFUNCTION()
+		FVector GetTurretForwardVector();
+
+	UFUNCTION()
+		void RotateTurretTo(FVector TargetPosition);
+
+	FVector GetEyesPosition();
 
 private:
 	float TargetForwardAxisValue = 0.f;
