@@ -1,9 +1,5 @@
-/*
-
-!/.gitignore
-!/*.uproject
-!/Content
-!/Source
-!/Config
-!/Plugins
-!README.md
+.vs/
+Binaries/
+Intermediate/
+Saved/
+*/sln
