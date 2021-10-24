@@ -6,11 +6,14 @@
 #include <Math/UnrealMathUtility.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/ArrowComponent.h>
+#include <Particles/ParticleSystemComponent.h>
+#include <Components/AudioComponent.h>
 #include "Tankogeddon.h"
 #include "TankPlayerController.h"
 #include "Cannon.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+
 
 // Sets default values
 ATankPawn::ATankPawn()
@@ -43,6 +46,16 @@ ATankPawn::ATankPawn()
 
 	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
 	HitCollider->SetupAttachment(BodyMesh);
+
+	DeathParticleEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Death particle effect"));
+	DeathParticleEffect->SetupAttachment(RootComponent);
+
+	DeathAudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Death audio effect"));
+	DeathAudioEffect->SetupAttachment(RootComponent);
+
+	HittedAudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Hitted audio effect"));
+	HittedAudioEffect->SetupAttachment(RootComponent);
+
 }
 
 void ATankPawn::MoveForward(float AxisValue)
@@ -203,10 +216,30 @@ void ATankPawn::SelectThirdCannon()
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
 		{
+			HittedAudioEffect->Play();
 			HealthComponent->TakeDamage(DamageData);
 		}
 
 void ATankPawn::Die()
+	{
+		if (isDead)
+		{
+			return;
+		}
+
+		isDead = true;
+
+		DeathParticleEffect->ActivateSystem();
+		DeathAudioEffect->Play();
+
+		MoveSpeed = 0.f;
+		RotationSpeed = 0.f;
+		TurretRotationSpeed = 0.f;
+
+		GetWorld()->GetTimerManager().SetTimer(DeathTimerHandle, this, &ATankPawn::DestroyTank, 2.f, false, 2.0f);
+	}
+
+void ATankPawn::DestroyTank()
 		{
 			Cannon->Destroy();
 			Destroy();
