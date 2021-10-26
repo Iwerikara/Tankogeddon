@@ -25,8 +25,7 @@ void AProjectile::Start()
 	GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 }
 
-void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTankogeddon, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 
@@ -46,6 +45,13 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		}
 		else
 		{
+			UPrimitiveComponent* PrimComponent = Cast<UPrimitiveComponent>(OtherComp);
+			if (PrimComponent && PrimComponent->IsSimulatingPhysics())
+			{
+				FVector ForceVector = GetActorForwardVector();
+				PrimComponent->AddImpulseAtLocation(ForceVector * PushForce, SweepResult.ImpactPoint);
+			}
+
 			//OtherActor->Destroy();
 		}
 
