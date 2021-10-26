@@ -5,13 +5,21 @@
 #include "Cannon.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "DamageTaker.h"
+#include "HealthComponent.h"
+#include "Components/BoxComponent.h"
+#include "Engine/TargetPoint.h"
 #include "TankPawn.generated.h"
 
+class UStaticMeshComponent;
+class UCameraComponent;
+class USpringArmComponent;
 class ATankPlayerController;
 class ACannon;
+class UArrowComponent;
 
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn
+class TANKOGEDDON_API ATankPawn : public APawn, public IDamageTaker
 {
 	GENERATED_BODY()
 
@@ -22,19 +30,34 @@ protected:
 
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class	UStaticMeshComponent* BodyMesh;
+	UStaticMeshComponent* BodyMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class	UStaticMeshComponent* TurretMesh;
+		UStaticMeshComponent* TurretMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class	USpringArmComponent* SpringArm;
+		USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class	UCameraComponent* Camera;
+		UCameraComponent* Camera;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UArrowComponent* CannonSetupPoint;
+		 UArrowComponent* CannonSetupPoint;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UHealthComponent* HealthComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		 UBoxComponent* HitCollider;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UAudioComponent* HittedAudioEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UParticleSystemComponent* DeathParticleEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UAudioComponent* DeathAudioEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 		TSubclassOf<ACannon> CannonClass;
@@ -71,6 +94,18 @@ protected:
 		bool bHasThirdCannon = false;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points", Meta = (MakeEditWidget = true))
+		TArray<ATargetPoint> PatrollingPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accurency")
+		float MovementAccurency = 50;
+
+	int32 FirstCannonAmmo = -1.f;
+	int32 SecondCannonAmmo = -1.f;
+	int32 ThirdCannonAmmo = -1.f;
+
+	FTimerHandle DeathTimerHandle;
+
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
@@ -88,13 +123,35 @@ public:
 	UFUNCTION()
 		void AltFire();
 
+
+	UFUNCTION()
+		void TakeDamage(FDamageData DamageData);
+
 	void SetupCannon(TSubclassOf<ACannon> SetupCannonClass);
 	TSubclassOf<ACannon> GetCannonClass();
 	ACannon* GetCannon();
 
+	void ShowAmmoLeft();
 	void SelectFirstCannon();
 	void SelectSecondCannon();
 	void SelectThirdCannon();
+
+	UFUNCTION()
+		TArray<FVector> GetPatrollingPoints();
+
+	UFUNCTION()
+		void SetPatrollingPoints(const TArray<ATargetPoint*>& NewPoints);
+
+	UFUNCTION()
+		float GetMovementAccurency() { return MovementAccurency; };
+
+	UFUNCTION()
+		FVector GetTurretForwardVector();
+
+	UFUNCTION()
+		void RotateTurretTo(FVector TargetPosition);
+
+	FVector GetEyesPosition();
 
 private:
 	float TargetForwardAxisValue = 0.f;
@@ -102,10 +159,20 @@ private:
 	float CurrentForwardAxisValue = 0.f;
 	float CurrentRightAxisValue = 0.f;
 
+	bool isDead = false;
+
 
 	UPROPERTY()
 		ATankPlayerController* TankController;
 
 	UPROPERTY()
 		ACannon* Cannon;
+
+	protected:
+		UFUNCTION()
+			void Die();
+
+		UFUNCTION()
+			void DamageTaken(float DamageValue);
+			void DestroyTank();
 };

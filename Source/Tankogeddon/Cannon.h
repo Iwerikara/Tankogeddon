@@ -11,6 +11,10 @@
 
 class UStaticMeshComponent;
 class UArrowComponent;
+class UParticleSystemComponent;
+class UAudioComponent;
+class UForceFeedbackEffect;
+class UMatineeCameraShake;
 
 
 UCLASS()
@@ -25,14 +29,20 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UArrowComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireRate = 1;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UParticleSystemComponent* ShootEffect;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UAudioComponent* AudioEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireRange = 1000;
+		float FireRate = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
-		float FireDamage = 1;
+		float FireRange = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+		float FireDamage = 1.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		int32 AltFireShots = 4;
@@ -52,12 +62,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
 		TSubclassOf<AProjectile> ProjectileClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		UForceFeedbackEffect* ShootForceEffect;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UMatineeCameraShake> ShootShake;
+
 	FTimerHandle ReloadTimerHandle;
 	FTimerHandle AltFireTimerHandle;
 
 	bool bReadyToFire = false;
 	int32 GetMaxAmmo();
 	int32 GetCurrentAmmo();
+	void SetCurrentAmmo(int32 Ammo);
 	bool AddAmmo(int32 Ammo);
 
 public:

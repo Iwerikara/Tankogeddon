@@ -2,6 +2,7 @@
 
 
 #include "Projectile.h"
+#include "Tankogeddon.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -27,10 +28,29 @@ void AProjectile::Start()
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+	UE_LOG(LogTankogeddon, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
 
-	OtherActor->Destroy();
-	Destroy();
+	AActor* OwnerActor = GetOwner();
+	AActor* OwnerByOwner = OwnerActor != nullptr ? OwnerActor->GetOwner() : nullptr;
+	if (OtherActor != OwnerActor && OtherActor != OwnerByOwner)
+	{
+		IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(OtherActor);
+		if (DamageTakerActor)
+		{
+			FDamageData DamageData;
+			DamageData.DamageValue = Damage;
+			DamageData.Instigator = OwnerActor;
+			DamageData.DamageMaker = this;
+
+			DamageTakerActor->TakeDamage(DamageData);
+		}
+		else
+		{
+			//OtherActor->Destroy();
+		}
+
+		Destroy();
+	}
 }
 
 void AProjectile::Move()

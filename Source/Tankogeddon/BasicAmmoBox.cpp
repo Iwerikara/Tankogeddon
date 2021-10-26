@@ -2,6 +2,7 @@
 
 #include "BasicAmmoBox.h"
 #include "TankPawn.h"
+#include "Tankogeddon.h"
 
 // Sets default values
 ABasicAmmoBox::ABasicAmmoBox()
@@ -32,6 +33,7 @@ void ABasicAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 		bool Added = PlayerCannon->AddAmmo(Ammo);
 		if (Added)
 		{
+			UE_LOG(LogTankogeddon, Warning, TEXT("Ammo added, current ammo: %d"), PlayerCannon->GetCurrentAmmo());
 			Destroy();
 		}
 	}
