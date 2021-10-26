@@ -24,6 +24,7 @@ void ATankPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SelectBasicCannon", IE_Pressed, this, &ATankPlayerController::SelectFirstCannon);
 	InputComponent->BindAction("SelectLaserCannon", IE_Pressed, this, &ATankPlayerController::SelectSecondCannon);
 	InputComponent->BindAction("SelectMegaCannon", IE_Pressed, this, &ATankPlayerController::SelectThirdCannon);
+	InputComponent->BindAction("SelectMortairCannon", IE_Pressed, this, &ATankPlayerController::SelectFourthCannon);
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -92,4 +93,9 @@ void ATankPlayerController::SelectSecondCannon()
 void ATankPlayerController::SelectThirdCannon()
 {
 	TankPawn->SelectThirdCannon();
+}
+
+void ATankPlayerController::SelectFourthCannon()
+{
+	TankPawn->SelectFourthCannon();
 }

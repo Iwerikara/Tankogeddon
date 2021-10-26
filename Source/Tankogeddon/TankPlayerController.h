@@ -44,5 +44,6 @@ protected:
 	void SelectFirstCannon();
 	void SelectSecondCannon();
 	void SelectThirdCannon();
+	void SelectFourthCannon();
 
 };

@@ -19,6 +19,9 @@ public:
 	AProjectile();
 
 	virtual void Start();
+	virtual void Stop();
+	void Explode();
+	void MakeDamageOrAddForce(AActor* OtherActor);
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -35,6 +38,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 		float PushForce = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		bool bExploding = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		float ExplodeRadius = 50.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		UParticleSystem* ExplodeParticleEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		USoundBase* ExplodeAudioEffect;
 
 	FTimerHandle MovementTimerHandle;
 

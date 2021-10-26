@@ -5,7 +5,9 @@
 #include "DrawDebugHelpers.h"
 #include "PhysicsComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include <particles/ParticleSystemComponent.h>
+#include <Particles/ParticleSystemComponent.h>
+#include <Components/AudioComponent.h>
+#include <Kismet/GameplayStatics.h>
 
 APhysicsProjectile::APhysicsProjectile()
 {
@@ -42,78 +44,13 @@ void APhysicsProjectile::Move()
 		TragectoryPointIndex++;
 		if (TragectoryPointIndex >= CurrentTrajectory.Num())
 		{
-			Explode();
+			Stop();
 			Destroy();
 		}
 		else
 		{
 			FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CurrentTrajectory[TragectoryPointIndex]);
 			SetActorRotation(NewRotation);
-		}
-	}
-}
-
-void APhysicsProjectile::Explode()
-{
-	FVector StartPos = GetActorLocation();
-	FVector EndPos = StartPos + FVector(0.1f);
-
-	FCollisionShape Shape = FCollisionShape::MakeSphere(ExplodeRadius);
-	FCollisionQueryParams Params = FCollisionQueryParams::DefaultQueryParam;
-	Params.AddIgnoredActor(this);
-	Params.bTraceComplex = true;
-	Params.TraceTag = "Explode Trace";
-	TArray<FHitResult> AttackHit;
-
-	FQuat Rotation = FQuat::Identity;
-
-	bool SweepResult = GetWorld()->SweepMultiByChannel
-	(
-		AttackHit,
-		StartPos,
-		EndPos,
-		Rotation,
-		ECollisionChannel::ECC_Visibility,
-		Shape,
-		Params
-	);
-
-	GetWorld()->DebugDrawTraceTag = "Explode Trace";
-
-	if (SweepResult)
-	{
-		for (FHitResult HitResult : AttackHit)
-		{
-			AActor* OtherActor = HitResult.GetActor();
-			if (!OtherActor)
-			{
-				continue;
-			}
-
-			IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(OtherActor);
-			if (DamageTakerActor)
-			{
-				FDamageData DamageData;
-				DamageData.DamageValue = Damage;
-				DamageData.Instigator = GetOwner();
-				DamageData.DamageMaker = this;
-
-				DamageTakerActor->TakeDamage(DamageData);
-			}
-			else
-			{
-				UPrimitiveComponent* OtherMesh = Cast<UPrimitiveComponent>(OtherActor->GetRootComponent());
-				if (OtherMesh)
-				{
-					if (OtherMesh->IsSimulatingPhysics())
-					{
-						FVector ForceVector = OtherActor->GetActorLocation() - GetActorLocation();
-						ForceVector.Normalize();
-						OtherMesh->AddImpulse(ForceVector * PushForce, NAME_None, true);
-					}
-				}
-			}
-
 		}
 	}
 }

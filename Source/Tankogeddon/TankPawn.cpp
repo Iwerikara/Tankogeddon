@@ -85,13 +85,20 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> SetupCannonClass)
 		{
 			FirstCannonAmmo = Cannon->GetCurrentAmmo();
 		}
+
 		else if (CannonClass == SecondCannonClass)
 		{
 			SecondCannonAmmo = Cannon->GetCurrentAmmo();
 		}
+
 		else if (CannonClass == ThirdCannonClass)
 		{
 			ThirdCannonAmmo = Cannon->GetCurrentAmmo();
+		}
+
+		else if (CannonClass == FourthCannonClass)
+		{
+			FourthCannonAmmo = Cannon->GetCurrentAmmo();
 		}
 
 		Cannon->Destroy();
@@ -108,13 +115,20 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> SetupCannonClass)
 	{
 		Cannon->SetCurrentAmmo(FirstCannonAmmo);
 	}
+
 	else if (SetupCannonClass == SecondCannonClass && SecondCannonAmmo >= 0)
 	{
 		Cannon->SetCurrentAmmo(SecondCannonAmmo);
 	}
+
 	else if (SetupCannonClass == ThirdCannonClass && ThirdCannonAmmo >= 0)
 	{
 		Cannon->SetCurrentAmmo(ThirdCannonAmmo);
+	}
+
+	else if (SetupCannonClass == FourthCannonClass && FourthCannonAmmo >= 0)
+	{
+		Cannon->SetCurrentAmmo(FourthCannonAmmo);
 	}
 
 	AddCannon(SetupCannonClass);
@@ -189,15 +203,23 @@ void ATankPawn::AddCannon(TSubclassOf<ACannon> CannonClassToAdd)
 
 	else if (CannonClassToAdd == ThirdCannonClass)
 	{
-		void ATankPawn::SelectFirstCannon()
-		{
-			if (FirstCannonClass && bHasFirstCannon)
-			{
-				SetupCannon(FirstCannonClass);
-			}
-		}
+		bHasThirdCannon = true;
+	}
+
+	else if (CannonClassToAdd == FourthCannonClass)
+	{
+		bHasFourthCannon = true;
 	}
 }
+
+void ATankPawn::SelectFirstCannon()
+{
+	if (FirstCannonClass && bHasFirstCannon)
+	{
+		SetupCannon(FirstCannonClass);
+	}
+}
+
 		
 void ATankPawn::SelectSecondCannon()
 		{
@@ -213,6 +235,14 @@ void ATankPawn::SelectThirdCannon()
 				SetupCannon(ThirdCannonClass);
 			}
 		}
+
+void ATankPawn::SelectFourthCannon()
+{
+	if (FourthCannonClass && bHasFourthCannon)
+	{
+		SetupCannon(FourthCannonClass);
+	}
+}
 
 void ATankPawn::TakeDamage(FDamageData DamageData)
 		{

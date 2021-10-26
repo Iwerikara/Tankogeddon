@@ -71,6 +71,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UserInput|Cannons")
 		TSubclassOf<ACannon> ThirdCannonClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UserInput|Cannons")
+		TSubclassOf<ACannon> FourthCannonClass;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float MoveSpeed = 80.f;
 
@@ -92,7 +95,8 @@ protected:
 		bool bHasSecondCannon = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 		bool bHasThirdCannon = false;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
+		bool bHasFourthCannon = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Patrol points", Meta = (MakeEditWidget = true))
 		TArray<ATargetPoint> PatrollingPoints;
@@ -103,6 +107,7 @@ protected:
 	int32 FirstCannonAmmo = -1.f;
 	int32 SecondCannonAmmo = -1.f;
 	int32 ThirdCannonAmmo = -1.f;
+	int32 FourthCannonAmmo = -1.f;
 
 	FTimerHandle DeathTimerHandle;
 
@@ -135,6 +140,8 @@ public:
 	void SelectFirstCannon();
 	void SelectSecondCannon();
 	void SelectThirdCannon();
+	void SelectFourthCannon();
+
 
 	UFUNCTION()
 		TArray<FVector> GetPatrollingPoints();

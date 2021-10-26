@@ -134,6 +134,10 @@ void ATankAIController::Fire()
 
 bool ATankAIController::CheckIsPlayerSeen()
 {
+	if (!PlayerPawn)
+	{
+		return false;
+	}
 	FVector PlayerPos = PlayerPawn->GetActorLocation();
 	FVector EyesPos = TankPawn->GetEyesPosition();
 
@@ -142,19 +146,16 @@ bool ATankAIController::CheckIsPlayerSeen()
 	TraceParams.bTraceComplex = true;
 	TraceParams.AddIgnoredActor(TankPawn);
 	TraceParams.bReturnPhysicalMaterial = false;
-
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, EyesPos, PlayerPos, ECollisionChannel::ECC_Visibility, TraceParams))
 	{
 		AActor* HitResultActor = HitResult.Actor.Get();
 		if (HitResultActor)
 		{
-			DrawDebugLine(GetWorld(), EyesPos, HitResult.Location, FColor::Orange, false, 0.2f, 0, 10);
+			DrawDebugLine(GetWorld(), EyesPos, HitResult.Location, FColor::Red, false, 0.2f, 0, 10);
 			//UE_LOG(LogTankogeddon, Warning, TEXT("Hit result: %s"), *HitResultActor->GetName());
-
 			return HitResultActor == PlayerPawn;
 		}
 	}
-	DrawDebugLine(GetWorld(), EyesPos, PlayerPos, FColor::Orange, false, 0.5f, 0, 10);
-
+	DrawDebugLine(GetWorld(), EyesPos, PlayerPos, FColor::Blue, false, 0.5f, 0, 10);
 	return false;
 }
